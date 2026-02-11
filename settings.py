@@ -1,8 +1,8 @@
 import pygame
 
 # 屏幕设置
-SCREEN_WIDTH = 660
-SCREEN_HEIGHT = 600
+SCREEN_WIDTH = 600
+SCREEN_HEIGHT = 660
 FPS = 60
 
 # 颜色定义 (R, G, B)
