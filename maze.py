@@ -44,20 +44,20 @@ class Maze:
         grid_y=y//CELL_SIZE
         
         if grid_y<0 or grid_y>=len(self.layout):
-            return 0
+            return 0,False
         if grid_x<0 or grid_x>=len(self.layout[0]):
-            return 0
+            return 0,False
         
         cell_value=self.layout[grid_y][grid_x]
 
         if cell_value==CELL:
             self.layout[grid_y][grid_x]=0
-            return 10
+            return 10,False
         elif cell_value==BIG_CELL:
             self.layout[grid_y][grid_x]=0
-            return 50
+            return 50,True
         
-        return 0
+        return 0,False
     
     def count_remaining_dots(self):
         """统计地图上还有多少豆子,用来判断是否胜利"""
