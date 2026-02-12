@@ -66,11 +66,11 @@ class Pacman:
             self.x=new_x
             self.y=new_y
             
-            score=maze.eat_dot(self.x,self.y)
-            return score
+            score,bool=maze.eat_dot(self.x,self.y)
+            return score,bool
         else:
             self.direction=STAND
-            return 0
+            return 0,False
 
     def _will_collide(self, x, y, maze):
         """使用方形碰撞箱检测"""

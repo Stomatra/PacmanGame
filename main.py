@@ -70,7 +70,7 @@ while running:
 
     #更新幽灵恐惧计时器
     for ghost in ghosts:
-        if ghost.frightened_timer>0:
+        if ghost.frightened_timer>0 and ghost.state!="eaten":
             ghost.frightened_timer-=1
             if ghost.frightened_timer==0:
                 ghost.state="normal"
@@ -84,6 +84,8 @@ while running:
                 #吃掉幽灵,加分
                 score+=200
                 ghost.state="eaten"
+                ghost.x=1000
+                ghost.y=1000
             else:
                 #游戏结束
                 print("Game Over!")

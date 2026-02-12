@@ -49,6 +49,34 @@ class Ghost:
 
         pygame.draw.circle(screen,color,(int(self.x),int(self.y)),self.radius)
 
+    def _should_change_direction(self,maze):
+        """判断是否需要换方向"""
+        new_x,new_y=self._calculate_next_position()
+
+        if self._will_collide(new_x,new_y,maze):
+            return True
+        
+        if self._is_at_intersection(maze):
+            return random.random()<0.2
+        
+        return False
+
+    def _calculate_next_position(self):
+        """根据当前方向计算下一个位置"""
+        new_x=self.x
+        new_y=self.y
+
+        if self.direction==LEFT:
+            new_x-=self.speed
+        elif self.direction==RIGHT:
+            new_x+=self.speed
+        elif self.direction==UP:
+            new_y-=self.speed
+        elif self.direction==DOWN:
+            new_y+=self.speed
+
+        return new_x,new_y
+
     def _choose_direction(self,maze):
         """选择一个可行的方向"""
         possible_directions=[]
