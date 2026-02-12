@@ -19,11 +19,11 @@ maze=Maze()
 
 pacman=Pacman(10*CELL_SIZE+CELL_SIZE//2,16*CELL_SIZE+CELL_SIZE//2)
 
-ghosts=[
-    Ghost(9.5*CELL_SIZE,9.5*CELL_SIZE,RED,"Blinky"),
-    Ghost(10.5*CELL_SIZE,9.5*CELL_SIZE,PINK,"Pinky"),
-    Ghost(9.5*CELL_SIZE,10.5*CELL_SIZE,CYAN,"Inky"),
-    Ghost(10.5*CELL_SIZE,10.5*CELL_SIZE,ORANGE,"Clyde")
+ghosts = [
+    Ghost(1 * CELL_SIZE + CELL_SIZE // 2, 1 * CELL_SIZE + CELL_SIZE // 2, RED, "Blinky"),
+    Ghost(18 * CELL_SIZE + CELL_SIZE // 2, 1 * CELL_SIZE + CELL_SIZE // 2, PINK, "Pinky"),
+    Ghost(1 * CELL_SIZE + CELL_SIZE // 2, 20 * CELL_SIZE + CELL_SIZE // 2, CYAN, "Inky"),
+    Ghost(18 * CELL_SIZE + CELL_SIZE // 2, 20 * CELL_SIZE + CELL_SIZE // 2, ORANGE, "Clyde")
 ]
 
 score=0
@@ -56,7 +56,6 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-    
     #处理输入
     pacman.handle_input()
 

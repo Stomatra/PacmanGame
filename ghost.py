@@ -10,34 +10,21 @@ class Ghost:
         self.name=name
         self.speed=GHOST_SPEED
         self.direction=UP
-        self.radius=CELL_SIZE//2-2
+        self.radius=CELL_SIZE//2-1
 
         self.state="normal"#normal/frightened/eaten
         self.frightened_timer=0 #恐惧模式剩余时间
 
     def move(self,maze):
         """简单随机移动"""
-        new_x=self.x
-        new_y=self.y
-
-        if self.direction==LEFT:
-            new_x-=self.speed
-        elif self.direction==RIGHT:
-            new_x+=self.speed
-        elif self.direction==UP:
-            new_y-=self.speed
-        elif self.direction==DOWN:
-            new_y+=self.speed
-
-        if self._will_collide(new_x,new_y,maze) or self._is_at_intersection(maze):
+        if self._should_change_direction(maze):
             self._choose_direction(maze)
-        else:
+
+        new_x,new_y=self._calculate_next_position()
+
+        if not self._will_collide(new_x,new_y,maze):
             self.x=new_x
             self.y=new_y
-
-        if self._will_collide(new_x, new_y, maze):
-            print(f"{self.name} 撞墙了，尝试换方向")
-            self._choose_direction(maze)
 
     def draw(self,screen):
         """绘制幽灵"""
@@ -56,10 +43,24 @@ class Ghost:
         if self._will_collide(new_x,new_y,maze):
             return True
         
-        if self._is_at_intersection(maze):
-            return random.random()<0.2
+        if self._is_near_grid_center() and self._is_at_intersection(maze):
+            return random.random()<0.1
         
         return False
+
+    def _is_near_grid_center(self):
+        """检查是否接近格子中心"""
+        offset_x=self.x%CELL_SIZE
+        offset_y=self.y%CELL_SIZE
+
+        center=CELL_SIZE/2
+        threshold=2
+        
+        #如果x和y都接近格子中心
+        near_x=abs(offset_x-center)<threshold
+        near_y=abs(offset_y-center)<threshold
+
+        return near_x and near_y
 
     def _calculate_next_position(self):
         """根据当前方向计算下一个位置"""
@@ -81,13 +82,38 @@ class Ghost:
         """选择一个可行的方向"""
         possible_directions=[]
 
+        #找出所有可行方向
         for direction in [UP,DOWN,LEFT,RIGHT]:
             test_x,test_y=self._get_next_position(direction)
             if not self._will_collide(test_x,test_y,maze):
                 possible_directions.append(direction)
+
+        if not possible_directions:
+            print(f"{self.name}无路可走！")
+            return
+        
+        #获取反方向
+        reverse_direction=self._get_reverse_direction(self.direction)
+
+        #过滤掉反方向（除非只有反方向可走）
+        forward_directions=[d for d in possible_directions if d!=reverse_direction]
             
+        #优先选择非反向的方向
         if possible_directions:
-            self.direction=random.choice(possible_directions)
+            self.direction=random.choice(forward_directions)
+
+    def _get_reverse_direction(self,direction):
+        """获取反方向"""
+        if direction==UP:
+            return DOWN
+        elif direction==DOWN:
+            return UP
+        elif direction==LEFT:
+            return RIGHT
+        elif direction==RIGHT:
+            return LEFT
+        else:
+            return STAND
 
     def _get_next_position(self,direction):
         """根据方向计算下一个位置"""
@@ -115,7 +141,7 @@ class Ghost:
     
     def _will_collide(self,x,y,maze):
         """检查是否会撞墙(方形碰撞箱)"""
-        box_size=self.radius*0.85
+        box_size=self.radius
 
         corners=[
             (x-box_size,y-box_size),
